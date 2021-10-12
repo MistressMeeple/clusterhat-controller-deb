@@ -15,7 +15,7 @@
 # the debian-policy package
 
 . /usr/share/debconf/confmodule
-echo "$1"
+echo ">>?<< $1"
 case "$1" in
 #    preconfigure)
 #    ;;
@@ -24,8 +24,8 @@ case "$1" in
 
 		# copy default template
 		if [ ! -e $CONFIGFILE ]; then
-			cp /usr/share/clusterctrl/clusterctrl-conf-defaults $CONFIGFILE
-			echo 'TYPE=Bridge' >> "$CONFIGFILE"
+#			cp /usr/share/clusterctrl/clusterctrl-conf-defaults $CONFIGFILE
+#			echo 'TYPE=Bridge' >> "$CONFIGFILE"
 		fi
 
 		# Substitute in the values from the debconf db.
@@ -36,24 +36,24 @@ case "$1" in
 #		VALID='';while [ ! "$VALID" ]; do; db_get clusterctrl/device_type; if [ "$RET" = "NAT" ] || [ "$RET" = "Bridge" ]; then; VALID=1;fi; done
 		db_get clusterctrl/device_type
 		TYPE="$RET"
-		cp -a -f $CONFIGFILE $CONFIGFILE.tmp
+#		cp -a -f $CONFIGFILE $CONFIGFILE.tmp
 
 		# If the admin deleted or commented some variables but then set
 		# them via debconf, (re-)add them to the conffile.
-		test -z "$TYPE" || grep -Eq '^ *TYPE=' $CONFIGFILE || echo "TYPE=" >> $CONFIGFILE
-		sed -e "s/^ *TYPE=.*/TYPE=\"$TYPE\"/" < $CONFIGFILE > $CONFIGFILE.tmp
-		mv -f $CONFIGFILE.tmp $CONFIGFILE
-		
+#		test -z "$TYPE" || grep -Eq '^ *TYPE=' $CONFIGFILE || echo "TYPE=" >> $CONFIGFILE
+#		sed -e "s/^ *TYPE=.*/TYPE=\"$TYPE\"/" < $CONFIGFILE > $CONFIGFILE.tmp
+#		mv -f $CONFIGFILE.tmp $CONFIGFILE
+
 		## read in configfile
-		. $CONFIGFILE
+#		. $CONFIGFILE
 	;;
 	floopererrer)
-		
+
 		if [ -f /etc/dhcpcd.conf ] ; then
 			rm -f /etc/dhcpcd.conf.old
 			mv /etc/dhcpcd.conf /etc/dhcpcd.conf.old
 		fi
-			
+
 			cat << EOF >> $MNT/etc/dhcpcd.conf
 # ClusterCTRL
 reboot 15
