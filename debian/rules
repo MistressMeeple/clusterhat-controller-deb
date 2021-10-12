@@ -7,20 +7,20 @@
 #	dh_installudev
 #	rm -f debian/dfu-util.udev
 	
-override_dh_systemd_start:
-	dh_systemd_start --no-start \
-		modules/controller-base/lib/systemd/system/clusterctrl-init.service \
-		modules/controller-base/lib/systemd/system/clusterctrl-rpiboot.service \
-		modules/controller-base/lib/systemd/system/clusterctrl-composite.service 
+#override_dh_systemd_start:
+#	dh_systemd_start --no-start \
+#		modules/controller-base/lib/systemd/system/clusterctrl-init.service \
+#		modules/controller-base/lib/systemd/system/clusterctrl-rpiboot.service \
+#		modules/controller-base/lib/systemd/system/clusterctrl-composite.service 
 
-override_dh_systemd_enable:
-	dh_systemd_enable --name=vyatta-system.clear-system-config
-	dh_systemd_enable --name=vyatta-system.generate-ssh-banner
-	dh_systemd_enable --name=vyatta-system.system-configure
-	dh_systemd_enable --name=vyatta-system.system-preconfigure
-	dh_systemd_enable --name=vyatta-system.vyatta-cpu-history-daemon
-	dh_systemd_enable --name=vyatta-system.vyatta-platform-setup
-	dh_systemd_enable --name=vyatta-system.vyatta-pre-boot.target
+#override_dh_systemd_enable:
+#	dh_systemd_enable --name=vyatta-system.clear-system-config
+#	dh_systemd_enable --name=vyatta-system.generate-ssh-banner
+#	dh_systemd_enable --name=vyatta-system.system-configure
+#	dh_systemd_enable --name=vyatta-system.system-preconfigure
+#	dh_systemd_enable --name=vyatta-system.vyatta-cpu-history-daemon
+#	dh_systemd_enable --name=vyatta-system.vyatta-platform-setup
+#	dh_systemd_enable --name=vyatta-system.vyatta-pre-boot.target
 
 %:
 	dh $@ 
