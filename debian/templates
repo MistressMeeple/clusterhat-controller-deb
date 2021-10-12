@@ -1,0 +1,9 @@
+Template: clusterctrl/device_type
+Type: select
+Choices: Bridge, NAT
+Default: Bridge
+Description: Which type do you want to install?
+ .
+ Bridge: Creates a bridged network between this and any connected nodes. Nodes connected in this way are connected directly to your network through this device
+ .
+ NAT: Creates a NAT network between this and any connected nodes. Nodes connected in this way have all data NAT'ed across this device and are part of a seperate network

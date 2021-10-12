@@ -1,0 +1,28 @@
+/var/lib/clusterctrl/
+			nfs/
+				node1
+				node2
+				node3
+				node4
+			overlayFS/
+				node1.ext4
+				node2.ext4
+				node3.ext4
+				node4.ext4
+				node1/
+					upper
+					work
+					ln lower -> ../nodeBase
+				node2/
+					upper
+					work
+					ln lower -> ../nodeBase
+				node3/
+					upper
+					work
+					ln lower -> ../nodeBase
+				node4
+					upper
+					work
+					ln lower -> ../nodeBase
+				nodeBase
