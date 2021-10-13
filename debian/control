@@ -10,6 +10,6 @@ Homepage: https://github.com/MistressMeeple/clusterhat
 
 Package: clusterctrl
 Architecture: any
-Depends: ${misc:Depends}, debconf [arm* any], rpiboot [arm* any], bridge-utils [arm* any], screen [arm* any], minicom [arm* any], python-smbus [arm* any], subversion [arm* any], git [arm* any], libusb-1.0-0-dev [arm* any], nfs-kernel-server [arm* any], python-usb [arm* any], python-libusb1 [arm* any], busybox [arm* any], python [arm* any], iptables-persistent [arm* any]
+Depends: ${misc:Depends}, debconf [armhf any], rpiboot [armhf any], bridge-utils [armhf any], screen [armhf any], minicom [armhf any], python-smbus [armhf any], subversion [armhf any], git [armhf any], libusb-1.0-0-dev [armhf any], nfs-kernel-server [armhf any], python-usb [armhf any], python-libusb1 [armhf any], busybox [armhf any], python [armhf any], iptables-persistent [armhf any]
 Description: Controls ClusterHat and Pi Zero cluster
  ClusterCTRL commands interface with the Cluster Hat and the Pi's attached to it 
