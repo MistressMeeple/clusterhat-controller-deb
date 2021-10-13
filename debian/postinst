@@ -109,9 +109,9 @@ EOF
 		rm -f /etc/network/interfaces.d/clusterctrl
 		sed -i 's~^static ip_address=172.19.181.*/24 #Cluster.*~static ip_address=172.19.181.253/24 #ClusterCTRL~' /etc/dhcpcd.conf
 		if [ "$TYPE" = "NAT" ]; then
-			cp -f "/usr/share/clusterctrl/interfaces.nat" /etc/network/interfaces.d/clusterctrl
+			cp -f /usr/share/clusterctrl/interfaces.nat /etc/network/interfaces.d/clusterctrl
 		elif [ "$TYPE" = "Bridge" ];then
-			cp -f "/usr/share/clusterctrl/interfaces.bridge" /etc/network/interfaces.d/clusterctrl
+			cp -f /usr/share/clusterctrl/interfaces.bridge /etc/network/interfaces.d/clusterctrl
 			sed -i 's#^\(denyinterfaces.*\)#\1 eth0#' /etc/dhcpcd.conf
 		fi
 
