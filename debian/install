@@ -1,2 +1,2 @@
-controllers/share /usr/share/
-controllers/sbin/ /usr/sbin/
+controllers/share /usr/
+controllers/sbin/ /usr/
