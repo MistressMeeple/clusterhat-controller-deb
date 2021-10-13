@@ -34,7 +34,7 @@ case "$1" in
 		# The cp before the sed ensures we do not mess up
 		# the config file's ownership and permissions.
 
-		VALID='';while [ ! "$VALID" ]; do; db_get clusterctrl/device_type; if [ "$RET" = "NAT" ] || [ "$RET" = "Bridge" ]; then; VALID=1;fi; done
+		#VALID='';while [ ! "$VALID" ]; do; db_get clusterctrl/device_type; if [ "$RET" = "NAT" ] || [ "$RET" = "Bridge" ]; then; VALID=1;fi; done
 		db_get clusterctrl/device_type
 		TYPE="$RET"
 		cp -a -f $CONFIGFILE $CONFIGFILE.tmp
