@@ -157,10 +157,10 @@ EOF
 
 
 		# Enable clusterctrl init
-		deb-systemd-helper enable controllers/clusterctrl-init
+#		deb-systemd-helper enable controllers/clusterctrl-init
 
 		# Enable rpiboot for booting without SD cards
-		deb-systemd-helper enable controllers/clusterctrl-rpiboot
+#		deb-systemd-helper enable controllers/clusterctrl-rpiboot
 
 		# Disable nfs server (rely on clusterctrl-rpiboot to start it if needed)
 		deb-systemd-helper disable nfs-kernel-server
