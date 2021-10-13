@@ -48,24 +48,24 @@ DATA_DIR=/var/lib/clusterctrl
 NODE_PREFIX=node.
 
 # Where the boot folder will be located
-# Default: $DATA_FOLDER/boot
-BOOT_DIR=$DATA_FOLDER/boot
+# Default: boot
+BOOT_DIR=boot
 
 # Where the NFS will export clusterctrl node's OS
-#Default: $DATA_FOLDER/nfs
-NFS_DIR=$DATA_FOLDER/nfs
+#Default: nfs
+NFS_DIR=nfs
 
 # Where the OverlayFS folders will be stored
-# Default: $DATA_FOLDER/ofs
-OFS_DIR=$DATA_FOLDER/ofs
+# Default: ofs
+OFS_DIR=ofs
 
 # Where the Base (lower) directory will be for nodes
 # Default: $OFS_DIR/$NODE_PREFIXbase
-OFS_LOWER_DIR=$OFS_DIR/$NODE_PREFIXbase
+OFS_LOWER_DIR=base
 
 # Where the VirtualFS that contains the OFS folders will be stored
 # Default: $DATA_FOLDER/vfs
-VFS_DIR=$DATA_FOLDER/vfs
+VFS_DIR=vfs
 
 # Default max size of VirtualFS on creation, passed firectly into the "count" param of dd
 # Default: 2GB
