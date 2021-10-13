@@ -25,7 +25,7 @@ case "$1" in
 
 		# copy default template
 		if [ ! -e $CONFIGFILE ]; then
-			cp /usr/share/clusterctrl/clusterctrl-conf-defaults $CONFIGFILE
+			cp /usr/share/clusterctrl/clusterctrl.sample $CONFIGFILE
 			echo 'TYPE=Bridge' >> "$CONFIGFILE"
 		fi
 
