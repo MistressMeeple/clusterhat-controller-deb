@@ -140,18 +140,18 @@ EOF
 
 		# Setup directories for rpiboot
 		echo ":$DATA_DIR: :$NODE_PREFIX: :$BOOT_DIR: :$NFS_DIR: :$OFS_DIR: :$OFS_LOWER_DIR: :$VFS_DIR: :$VFS_SIZE:"
-		mkdir -p "$DATA_DIR/$BOOT_DIR"
+		mkdir -fp "$DATA_DIR/$BOOT_DIR"
 		ln -fs /boot/bootcode.bin "$DATA_DIR/$BOOT_DIR"
-		mkdir -p "$DATA_DIR/$NFS_DIR"
-		mkdir -p "$DATA_DIR/$VFS_DIR"
-		mkdir -p "$DATA_DIR/$OFS_DIR"
+		mkdir -fp "$DATA_DIR/$NFS_DIR"
+		mkdir -fp "$DATA_DIR/$VFS_DIR"
+		mkdir -fp "$DATA_DIR/$OFS_DIR"
 
 		# Setup NFS exports for NFSROOT
 		echo "# ClusterCTRL exports for USB boot" >> /etc/exports
 		P=0
 		while [ "$P" -le 4 ]; do
 			echo "$DATA_DIR/$NFS_DIR/$NODE_PREFIX$P 172.19.180.$P(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
-			mkdir "$DATA_DIR/$NFS_DIR/$NODE_PREFIX$P"
+			mkdir -fp "$DATA_DIR/$NFS_DIR/$NODE_PREFIX$P"
 			P=$(( P + 1 ))
 		done
 
