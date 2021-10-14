@@ -46,24 +46,24 @@ if [ 1=0 ];then
 
 	# create size-limited file
 	touch "$VFS_DIR/$NODE_PREFIX$NODE.etx4"
-	
+
 	# fill with /dev/zero
 	dd if=/dev/zero of="$VFS_DIR/$NODE_PREFIX$NODE.etx4" status=progress iflag=count_bytes count="$VFS_SIZE"
-	
+
 	# mkfs
 	mkfs.etx4 "$VFS_DIR/$NODE_PREFIX$NODE.etx4"
-	
+
 	# mount vfs
 	echo "$VFS_DIR/$NODE_PREFIX$NODE.etx4    $OFS_DIR/$NODE_PREFIX$NODE/ ext4    rw,loop,usrquota,grpquota  0 0" | sudo tee -a /etc/fstab
 	sudo mount -a #"$VFS_DIR/$NODE_PREFIX$P.etx4
-	
+
 	# mkdir {upper,work}
 	mkdir "$OFS_DIR/$NODE_PREFIX$NODE/{upper,work}"
-	
+
 	# mount as OverlayFS
 	echo "overlay $NFS_DIR/$NODE_PREFIX$NODE/ overlay rw,relatime,lowerdir=$OFS_LOWER_DIR/,upperdir=$OFS_DIR/$NODE_PREFIX$NODE/upper,workdir=$OFS_DIR/$NODE_PREFIX$NODE/work 0 0" | sudo tee -a /etc/fstab
-	
-	
+
+
 	# Setup NFS exports for NFSROOT
 	echo "# ClusterCTRL exports for USB boot" >> $MNT/etc/exports
 	for ((P=1;P<=4;P++));do

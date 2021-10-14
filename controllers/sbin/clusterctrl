@@ -57,7 +57,7 @@ if os.path.isfile("/etc/default/clusterctrl"):
 				config[k.strip().lower()] = v.split('#')[0].strip(" \"'\n\t")
 
 # If we're not a controller of some sort exit cleanly
-if( 'type' not in config or not ( config['type'] == "c" or config['type'] == "cnat" ) ):
+if( 'type' not in config or not ( config['type'] == "Bridge" or config['type'] == "NAT" ) ):
 	sys.exit()
 
 # Config
