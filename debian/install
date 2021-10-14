@@ -1,5 +1,5 @@
 controllers/minicom/ /etc/minicom/
-controllers/controller-desktop/* /usr/
+#controllers/controller-desktop/* /usr/
 controllers/share/ /usr/
 controllers/sbin/ /usr/
 controllers/kernel-postinst-clusterctrl /etc/kernel/postinst.d/
