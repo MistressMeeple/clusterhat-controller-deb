@@ -145,10 +145,6 @@ EOF
 		printf '%s\n' 'mountd: ALL' 'rpcbind: ALL' '' >> /etc/hosts.deny
 		echo "hosts allow/deny"
 
-		# Extract files
-		# dont need to do this if using deb package
-		#(tar --exclude=.git -cC ../files/ -f - .) | (chroot $MNT tar -xC /)
-
 		# Setup directories for rpiboot
 #		echo ":$DATA_DIR: :$NODE_PREFIX: :$BOOT_DIR: :$NFS_DIR: :$OFS_DIR: :$OFS_LOWER_DIR: :$VFS_DIR: :$VFS_SIZE:"
 		mkdir -p "$DATA_DIR/$BOOT_DIR"
