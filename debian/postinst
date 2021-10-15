@@ -50,7 +50,7 @@ case "$1" in
 
 		if [ -f /etc/dhcpcd.conf ] ; then
 			rm -f /etc/dhcpcd.conf.old
-			mv /etc/dhcpcd.conf /etc/dhcpcd.conf.old
+			cp -f /etc/dhcpcd.conf /etc/dhcpcd.conf.old
 			echo "made backup of DHCPCD"
 		fi
 
@@ -74,7 +74,7 @@ EOF
 
 		if [ -f /etc/iptables/rules.v4 ] ; then
 			rm -f /etc/iptables/rules.v4.old
-			mv /etc/iptables/rules.v4 /etc/iptables/rules.v4.old
+			cp -f /etc/iptables/rules.v4 /etc/iptables/rules.v4.old
 			echo "Made backup of IPTables rules.v4"
 		fi
 		cat << EOF >> /etc/iptables/rules.v4
