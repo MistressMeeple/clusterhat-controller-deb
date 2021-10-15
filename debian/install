@@ -1,4 +1,4 @@
-controllers/minicom/ /etc/minicom/
+controllers/minicom/* /etc/minicom/
 #controllers/controller-desktop/* /usr/
 controllers/share/ /usr/
 controllers/sbin/ /usr/

@@ -9,7 +9,7 @@ Homepage: https://github.com/MistressMeeple/clusterhat
 #Vcs-Git: https://salsa.debian.org/debian/clusterhat.git
 
 Package: clusterctrl
-Architecture: any
-Depends: ${misc:Depends}, debconf [armhf any], rpiboot [armhf any], bridge-utils [armhf any], screen [armhf any], minicom [armhf any], python-smbus [armhf any], subversion [armhf any], git [armhf any], libusb-1.0-0-dev [armhf any], nfs-kernel-server [armhf any], python-usb [armhf any], python-libusb1 [armhf any], busybox [armhf any], python [armhf any], iptables-persistent [armhf any]
+Architecture: arm*
+Depends: ${misc:Depends}, debconf, rpiboot, bridge-utils, screen, minicom, python-smbus, subversion, git, libusb-1.0-0-dev, nfs-kernel-server, python-usb, python-libusb1, busybox, python, iptables-persistent
 Description: Controls ClusterHat and Pi Zero cluster
  ClusterCTRL commands interface with the Cluster Hat and the Pi's attached to it 
