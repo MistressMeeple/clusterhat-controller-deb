@@ -102,7 +102,7 @@ EOF
 
 		# Enable uart with login
 		raspi-config nonint do_serial 0
-		eho "Enabled serial"
+		echo "Enabled serial"
 		# Enable I2C (used for I/O expander on Cluster HAT v2.x)
 		raspi-config nonint do_i2c 0
 		echo "Enabled i2c"
@@ -134,6 +134,7 @@ EOF
 				sed -i "s/^net.ipv4.ip_forward=1/#net.ipv4.ip_forward=1 # ClusterCTRL/" /etc/sysctl.conf
 			fi
 		fi
+
 		echo "Changed sysctl.conf"
 
 
