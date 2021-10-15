@@ -121,13 +121,16 @@ EOF
 		echo "Added back predefined interfaces"
 
 		SYSCTLCONFED=$(grep -c "net.ipv4.ip_forward=1 # ClusterCTRL" /etc/sysctl.conf)
+		echo "$SYSCTLCONFED"
 		if [ "$SYSCTLCONFED" -eq 0  ];then
+			echo "appending to sysctl"
 			if [ "$TYPE" = "NAT" ]; then
 				echo 'net.ipv4.ip_forward=1 # ClusterCTRL' >> /etc/sysctl.conf
 			elif [ "$TYPE" = "Bridge" ]; then
 				echo '#net.ipv4.ip_forward=1 # ClusterCTRL' >> /etc/sysctl.conf
 			fi
 		else
+			echo "replacing in sysctl"
 			if [ "$TYPE" = "NAT" ]; then
 				sed -i "s/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1 # ClusterCTRL/" /etc/sysctl.conf
 			elif [ "$TYPE" = "Bridge" ]; then
