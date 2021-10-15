@@ -1,6 +1,6 @@
 #!/bin/bash
 git commit -a -m init
-rm /mnt/win/cluster-artifacts/$(ls -I ".deb" /mnt/win/cluster-artifacts/)
+#rm $(ls -I ".deb" /mnt/win/cluster-artifacts/)
 gbp buildpackage --git-ignore-new --git-export-dir=../cluster-artifacts --git-debian-branch=master --git-upstream-branch=master --git-upstream-tree=master
 git clean -dfx
 sudo chroot /mnt/win/MNT /usr/bin/apt remove clusterctrl -y
