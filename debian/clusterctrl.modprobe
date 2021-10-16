@@ -1,0 +1,2 @@
+options overlay nfs_export=Y
+options overlay index=on
