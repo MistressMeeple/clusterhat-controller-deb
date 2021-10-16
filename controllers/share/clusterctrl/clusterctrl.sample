@@ -74,3 +74,4 @@ VFS_SIZE=2GB
 
 # !! Do not alter this option manually !!
 # Use the "clusterctrl-reconfig" instead
+TYPE=NAT

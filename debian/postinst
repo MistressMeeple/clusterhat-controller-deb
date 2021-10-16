@@ -26,7 +26,7 @@ case "$1" in
 		# copy default template
 		if [ ! -e $CONFIGFILE ]; then
 			cp /usr/share/clusterctrl/clusterctrl.sample $CONFIGFILE
-			echo 'TYPE=Bridge' >> "$CONFIGFILE"
+#			echo 'TYPE=Bridge' >> "$CONFIGFILE"
 		fi
 
 		# Substitute in the values from the debconf db.
@@ -172,8 +172,8 @@ EOF
 		# Disable nfs server (rely on clusterctrl-rpiboot to start it if needed)
 #		deb-systemd-helper disable nfs-kernel-server
 #		echo "disable nfs server"
-		udevadm control --reload-rules
-		echo "reload udev"
+#		udevadm control --reload-rules
+#		echo "reload udev"
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)
