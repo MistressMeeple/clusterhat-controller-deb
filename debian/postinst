@@ -170,8 +170,8 @@ EOF
 #		deb-systemd-helper enable controllers/clusterctrl-rpiboot
 
 		# Disable nfs server (rely on clusterctrl-rpiboot to start it if needed)
-		deb-systemd-helper disable nfs-kernel-server
-		echo "disable nfs server"
+#		deb-systemd-helper disable nfs-kernel-server
+#		echo "disable nfs server"
 		udevadm control --reload-rules
 		echo "reload udev"
 	;;
