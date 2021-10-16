@@ -1,3 +1,4 @@
+controllers/clusterctrl-sysctl.conf /etc/sysctl.d/10-clusterctrl.conf
 controllers/minicom/* /etc/minicom/
 #controllers/controller-desktop/* /usr/
 controllers/share/ /usr/
