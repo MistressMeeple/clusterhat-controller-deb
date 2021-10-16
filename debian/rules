@@ -20,8 +20,8 @@ override_dh_installudev:
 #	dh_systemd_enable --name=vyatta-system.vyatta-platform-setup
 #	dh_systemd_enable --name=vyatta-system.vyatta-pre-boot.target
 override_dh_installsystemd:
-	dh_installsystemd clusterctrl-init.service 
-	dh_installsystemd clusterctrl-rpiboot.service
+	dh_installsystemd --name=clusterctrl-init
+	dh_installsystemd --name=clusterctrl-rpiboot
 
 %:
 	dh $@ 
