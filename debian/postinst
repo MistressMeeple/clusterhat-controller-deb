@@ -120,23 +120,22 @@ EOF
 		fi
 		echo "Added back predefined interfaces"
 
-#		CONFED=$(grep -c "net.ipv4.ip_forward=1 # ClusterCTRL" /etc/sysctl.conf)
-#		echo "$CONFED"
-#		if [ "$CONFED" -eq 0  ];then
-			echo "appending to sysctl"
+
+		if [ ! -f /etc/sysctl.d/10-clusterctrl.conf ]; then
+			echo "creating sysctl.d file, should exist already however"
 			if [ "$TYPE" = "NAT" ]; then
-				echo 'net.ipv4.ip_forward=1 # ClusterCTRL' >> /etc/sysctl.conf
+				echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.d/10-clusterctrl.conf
 			elif [ "$TYPE" = "Bridge" ]; then
-				echo '#net.ipv4.ip_forward=1 # ClusterCTRL' >> /etc/sysctl.conf
+				echo '#net.ipv4.ip_forward=1' >> /etc/sysctl.d/10-clusterctrl.conf
 			fi
-#		else
+		else
 			echo "replacing in sysctl"
 			if [ "$TYPE" = "NAT" ]; then
-				sed -i "s/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1 # ClusterCTRL/" /etc/sysctl.conf
+				sed -i "s/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.d/10-clusterctrl.conf
 			elif [ "$TYPE" = "Bridge" ]; then
-				sed -i "s/^net.ipv4.ip_forward=1/#net.ipv4.ip_forward=1 # ClusterCTRL/" /etc/sysctl.conf
+				sed -i "s/^net.ipv4.ip_forward=1/#net.ipv4.ip_forward=1/" /etc/sysctl.d/10-clusterctrl.conf
 			fi
-#		fi
+		fi
 
 		echo "Changed sysctl.conf"
 
