@@ -1,9 +1,5 @@
-controllers/10-clusterctrl.conf /etc/sysctl.d/
 controllers/kernel-postinst-clusterctrl /etc/kernel/postinst.d/
 controllers/minicom/* /etc/minicom/
 controllers/sbin/ /usr/
-
 controllers/share/clusterctrl/python /usr/share/clusterctrl/
 controllers/share/clusterctrl/ /usr/share/
-controllers/share/initramfs-tools /usr/share/
-

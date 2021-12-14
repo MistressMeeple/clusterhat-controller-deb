@@ -2,76 +2,46 @@
 # ClusterCTRL
 #
 
-# CLUSTERHATV1 - USB Path to ClusterHAT v1.x USB hub (can be detected for v2.x)
-# uncomment the appropriate entry below
-#CLUSTERHATV1="1-1"     # A+ (only has one USB port)
-#CLUSTERHATV1="1-1.2"   # B+/2B/3B top left USB port
-#CLUSTERHATV1="1-1.4"   # B+/2B/3B top right USB port
-#CLUSTERHATV1="1-1.3"   # B+/2B/3B bottom left USB port
-#CLUSTERHATV1="1-1.5"   # B+/2B/3B bottom right USB port
-#CLUSTERHATV1="1-1.1.2" # 3B+ top left USB port
-#CLUSTERHATV1="1-1.3"   # 3B+ top right USB port
-#CLUSTERHATV1="1-1.1.3" # 3B+ bottom left USB port
-#CLUSTERHATV1="1-1.2"   # 3B+ bottom right USB port
-#CLUSTERHATV1="1-1.3"   # 4B top left USB port
-#CLUSTERHATV1="1-1.1"   # 4B top right USB port
-#CLUSTERHATV1="1-1.4"   # 4B bottom left USB port
-#CLUSTERHATV1="1-1.2"   # 4B bottom right USB port
-#CLUSTERHATV1="1-1.1"   # CM4+CM4IO top USB port
-#CLUSTERHATV1="1-1.2"   # CM4+CM4IO bottom USB port
-
-
-# LINK - Link rpiboot boot directory in /var/lib/clusterhat/boot/ to /var/lib/clusterctrl/nfs/nodeX/boot/" on init
-LINK=1
-
 # CLUSTERHAT_SIZE - Number of Pi Zeros in your ClusterHAT (defaults to 4 if ClusterHAT exists and not set)
 #CLUSTERHAT_SIZE=4
-
-# CLUSTERHAT_FORCE - Set to the version number you want to control (overrides HAT EEPROM)
-#CLUSTERHAT_FORCE=1.3
 
 # CLUSTERCTRL_DELAY - How many seconds to delay between turning on Pi Zeros
 #CLUSTERCTRL_DELAY=1
 
-# FANGPIO - Allow fan to be toggled on controller using this GPIO pin with BCM numbering (comment out to turn off)
-FANGPIO=18
-
 ## Folders
+# Folder structure is joined by python os.path.join, ie if it starts with / it becomes a full path and ignores any previous parts of the join
+# DATA_DIR + / + {BOOT_DIR, OFS_LOWER_DIR}
+# DATA_DIR + / + NODE_PREFIX + NODE_INDEX + / {NFS_DIR, OFS_DIR, VFS_FILENAME} 
 
 # Clusterctrl data folder
 # Default: /var/lib/clusterctrl
 DATA_DIR=/var/lib/clusterctrl
 
-# The prefix for the nodes directories and file names. 
-# /var/lib/clusterctrl/nfs/X1
-# Default: p
-NODE_PREFIX=node.
-
 # Where the boot folder will be located
 # Default: boot
 BOOT_DIR=boot
 
+# What the Base (lower) directory, part of the OverlayFS, will be called
+# Default: base_image
+OFS_LOWER_DIR=base_image
+
+# The prefix for the nodes directories and file names. 
+# Default: node.
+NODE_PREFIX=node.
+
 # Where the NFS will export clusterctrl node's OS
-#Default: nfs
-NFS_DIR=nfs
+#Default: os
+NFS_DIR=os
 
 # Where the OverlayFS folders will be stored
-# Default: ofs
-OFS_DIR=ofs
+# Default: .overlayfs
+OFS_DIR=.overlayfs
 
-# Where the Base (lower) directory will be for nodes
-# Default: $OFS_DIR/$NODE_PREFIXbase
-OFS_LOWER_DIR=base
-
-# Where the VirtualFS that contains the OFS folders will be stored
-# Default: $DATA_FOLDER/vfs
-VFS_DIR=vfs
+# The VirtualFS filename that will contain the OFS folders  
+# Default: .vfs
+VFS_FILENAME=.vfs
 
 # Default max size of VirtualFS on creation, passed firectly into the "count" param of dd
-# Default: 2GB
-VFS_SIZE=2GB
+# Default: 8GB
+VFS_SIZE=8GB
 
-
-# !! Do not alter this option manually !!
-# Use the "clusterctrl-reconfig" instead
-TYPE=NAT

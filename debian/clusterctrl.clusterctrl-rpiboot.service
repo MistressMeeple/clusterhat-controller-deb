@@ -8,6 +8,7 @@ Requires=nfs-kernel-server.service
 
 [Service]
 Type=simple
+ExecStartPre=-/usr/sbin/clusterctrl usbboot service
 ExecStart=/usr/bin/rpiboot -m 2000 -d /var/lib/clusterctrl/boot/ -o -l -v
 
 [Install]
