@@ -1,0 +1,125 @@
+#
+# Interface definitions for Cluster CTRL (bridged controller)
+#
+
+auto brint br0
+
+# Interfaces bridged to brint (internal network)
+# - usbboot - Pi node "usb0.10" (VLAN 10 for NFSROOT)
+# - SD boot - unused
+
+iface brint inet static
+        bridge_ports none
+        address 172.19.180.254
+        netmask 255.255.255.0
+        bridge_stp off
+        bridge_waitport 0
+        bridge_fd 0
+
+# Interfaces bridged to br0 (external network)
+# - usbboot - Pi node "usb0" (untagged)
+# - SD boot - Pi node "usb0" (untagged)
+
+iface br0 inet manual
+	# either 'none' for NAT, or 'eth0' for Bridge
+        bridge_ports none
+        bridge_stp off
+        bridge_waitport 0
+        bridge_fd 0
+        post-up /usr/sbin/copyMAC eth0 br0
+
+# USB Gadget Ethernet node (controller) interfaces
+
+
+## Pi node P1
+# SD boot
+allow-hotplug ethpi1
+iface ethpi1 inet manual
+        pre-up ifup br0
+        pre-up brctl addif br0 ethpi1
+	up ip link set dev ethpi1 up
+
+# usbboot
+# Internal network (VLAN 10)
+allow-hotplug ethupi1.10
+iface ethupi1.10 inet manual
+        pre-up ifup brint
+        pre-up brctl addif brint ethupi1.10
+
+# External network (untagged)
+allow-hotplug ethupi1
+iface ethupi1 inet manual
+	pre-up ifup br0
+	pre-up brctl addif br0 ethupi1
+	up ip link set dev ethupi1 up
+	post-up ip link add link ethupi1 name ethupi1.10 type vlan id 10
+
+## Pi node P2
+# SD boot
+allow-hotplug ethpi2
+iface ethpi2 inet manual
+        pre-up ifup br0
+        pre-up brctl addif br0 ethpi2
+	up ip link set dev ethpi2 up
+
+# usbboot
+# Internal network (VLAN 10)
+allow-hotplug ethupi2.10
+iface ethupi2.10 inet manual
+        pre-up ifup brint
+        pre-up brctl addif brint ethupi2.10
+
+# External network (untagged)
+allow-hotplug ethupi2
+iface ethupi2 inet manual
+	pre-up ifup br0
+	pre-up brctl addif br0 ethupi2
+	up ip link set dev ethupi2 up
+	post-up ip link add link ethupi2 name ethupi2.10 type vlan id 10
+
+## Pi node P3
+# SD boot
+allow-hotplug ethpi3
+iface ethpi3 inet manual
+        pre-up ifup br0
+        pre-up brctl addif br0 ethpi3
+	up ip link set dev ethpi3 up
+
+# usbboot
+# Internal network (VLAN 10)
+allow-hotplug ethupi3.10
+iface ethupi3.10 inet manual
+        pre-up ifup brint
+        pre-up brctl addif brint ethupi3.10
+
+# External network (untagged)
+allow-hotplug ethupi3
+iface ethupi3 inet manual
+	pre-up ifup br0
+	pre-up brctl addif br0 ethupi3
+	up ip link set dev ethupi3 up
+	post-up ip link add link ethupi3 name ethupi3.10 type vlan id 10
+
+## Pi node P4
+# SD boot
+allow-hotplug ethpi4
+iface ethpi4 inet manual
+        pre-up ifup br0
+        pre-up brctl addif br0 ethpi4
+	up ip link set dev ethpi4 up
+
+# usbboot
+# Internal network (VLAN 10)
+allow-hotplug ethupi4.10
+iface ethupi4.10 inet manual
+        pre-up ifup brint
+        pre-up brctl addif brint ethupi4.10
+
+# External network (untagged)
+allow-hotplug ethupi4
+iface ethupi4 inet manual
+	pre-up ifup br0
+	pre-up brctl addif br0 ethupi4
+	up ip link set dev ethupi4 up
+	post-up ip link add link ethupi4 name ethupi4.10 type vlan id 10
+

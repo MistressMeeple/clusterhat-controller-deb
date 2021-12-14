@@ -1,0 +1,53 @@
+clusterhat-controller/					Root dir    
+├── build.sh						├── build script
+├── controllers						├── data folder
+│   ├── 10-clusterctrl.conf				│    ├── file for /etc/sysctl.d, enable net.ip_forwarding
+│   ├── kernel-postinst-clusterctrl			│    ├── file for /etc/kernel/postinst.d/, rebuild kernel modules? for usbboot?
+│   ├── minicom						│    ├── dir holding minicom configs
+│   │   ├── minirc.p1					│    │   ├── p1
+│   │   ├── minirc.p2					│    │   ├── 2
+│   │   ├── minirc.p3					│    │   ├── 3
+│   │   ├── minirc.p4					│    │   ├── 4
+│   │   └── minirc.p5					│    │   └── 5
+│   ├── sbin						│    ├── sbin
+│   │   ├── clusterctrl					│    │   ├── main executable
+│   │   ├── clusterctrl-reconfigure			│    │   ├── used to reconfig 
+│   │   ├── copyMAC					│    │   ├── used in the interfaces presets
+│   │   └── usbboot-init				│    │   └── not used anymore? 
+│   └── share						│    └── share
+│       ├── clusterctrl					│	 ├── storage folder 
+│       │   ├── clusterctrl.sample			│	 │	├── default config, read from /etc/default/clusterctrl
+│       │   ├── interfaces.bridge			│	 │	├── prebuild interface for bridge networking
+│       │   ├── interfaces.nat				│	 │	├── prebuild interface for NAT networking
+│       │   └── python					│	 │	└── python folder
+│       │       ├── clusterctrl-setup-gadget.sh		│	 │	    ├── no idea
+│       │       └── xra1200.py				│	 │	    └── used to interface with the HAT's 2nd version hardware
+│       └── initramfs-tools				│	 └── initRAMFS tool dir
+│           └── scripts					│	     └── scripts dir
+│               └── nfs-top				│		 └── nfs-top
+│                   └── 00_clusterctrl			│		     └── ?
+├── debian						├── debian folder
+│   ├── changelog					│    ├── track changes from previous release
+│   ├── clusterctrl.clusterctrl-init.service		│    ├── service that calls '/sbin/clusterctrl init'
+│   ├── clusterctrl.clusterctrl-rpiboot.service		│    ├── service that starts RPIBoot with the configured folders for usbbooting
+│   ├── clusterctrl.default				│    ├── copy of default config to be placed automagically into /etc/default/clusterctrl
+│   ├── clusterctrl.initramfs-hook			│    ├── allows AWK, IP & SED to be used in initramfs
+│   ├── clusterctrl.modprobe				│    ├── usbboot modprobe settings I found were neccessary 
+│   ├── clusterctrl.udev				│    ├── /dev/ttyPI setups and other things
+│   ├── compat						│    ├── compatability level (currently set to 13, latest at the time)
+│   ├── config						│    ├── debconf script to show the config menu
+│   ├── control						│    ├── .deb control file, tells what packages are needed, description and author
+│   ├── copyright					│    ├── the copyright file of who owns which bits of the code
+│   ├── install						│    ├── where to install all the files when extracting package
+│   ├── po						│    ├── po folder ???
+│   │   └── -						│    │	 └── ???
+│   ├── postinst					│    ├── post installation script handling setup of dhcpcd, iptables, pi gpio, hosts allow/deny, system.d
+│   ├── postrm						│    ├── post removal script handing the removal/cleanup of files
+│   ├── prerm						│    ├── pre-removal script that handles 
+│   ├── rules						│    ├── rules, override normal .deb functionality with parameters, mainly to install services properly
+│   ├── source						│    ├── source folder
+│   │   └── format					│    │	 └── format of the source, currently 3.0 (quilt)
+│   └── templates					│    └── templates are list of "screens" that can be shown by debconf while configuring
+├── file_descriptions					├── this file, brief description of files and what they do
+├── folder layout					├── previous/current folder structure once installed, of the nodes and their directories (/var/lib/clusterctrl/node.1/vfs.ext4 etc)
+└── from-git_create.sh					└── what the create.sh runs from the github of clusterctrl
