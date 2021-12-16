@@ -71,8 +71,7 @@ COMMIT
 # Completed on Fri Mar 13 00:00:00 2018
 # End ClusterCTRL
 EOF
-
-		if command -v raspi-config &> /dev/null; then
+		if command -v raspi-config > /dev/null; then
 			echo "Enabled serial and i2c"
 			# Enable uart with login
 			# Enable I2C (used for I/O expander on Cluster HAT v2.x)
