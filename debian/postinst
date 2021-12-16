@@ -30,16 +30,21 @@ case "$1" in
 # ClusterCTRL
 reboot 15
 denyinterfaces ethpi* ethupi* ethupi*.10 brint eth0 usb0.10
+
 profile clusterctrl_fallback_usb0
-static ip_address=172.19.181.254/24 #ClusterCTRL
-static routers=172.19.181.254
+static ip_address=$(echo "$INTERNAL_IP_BASE" | sed "s/{node_index:n}/254/")/24 #ClusterCTRL
+static routers=$(echo "$INTERNAL_IP_BASE" | sed "s/{node_index:n}/254/")
 static domain_name_servers=192.168.2.109 192.168.2.1 192.168.1.254
+
 profile clusterctrl_fallback_br0
-static ip_address=172.19.181.254/24
+static ip_address=$(echo "$INTERNAL_IP_BASE" | sed "s/{node_index:n}/254/")/24
+
 interface usb0
 fallback clusterctrl_fallback_usb0
+
 interface br0
 fallback clusterctrl_fallback_br0
+
 # End ClusterCTRL
 EOF
 
@@ -61,7 +66,7 @@ COMMIT
 :INPUT ACCEPT [7:1226]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
--A POSTROUTING -s 172.19.181.0/24 ! -o br0 -j MASQUERADE
+-A POSTROUTING -s $(echo "$INTERNAL_IP_BASE" | sed "s/{node_index:n}/0/")/24 ! -o br0 -j MASQUERADE
 COMMIT
 # Completed on Fri Mar 13 00:00:00 2018
 # End ClusterCTRL
@@ -77,14 +82,10 @@ EOF
 			echo "Raspi-config not found, assuming not on raspberry pi"
 		fi
 
-		printf '%s\n' 'mountd: 172.19.181.' 'rpcbind: 172.19.181.' '' >> /etc/hosts.allow
+		printf '%s\n' 'mountd: '+$INTERNAL_IP_BASE 'rpcbind: '+$INTERNAL_IP_BASE '' >> /etc/hosts.allow
 		printf '%s\n' 'mountd: ALL' 'rpcbind: ALL' '' >> /etc/hosts.deny
-		
-		
-		cp -f /usr/share/clusterctrl/interfaces /etc/network/interfaces.d/clusterctrl
-
-
-
+		result=$(cat /home/meeple/remote-dir/clusterhat-controller/controllers/share/clusterctrl/interfaces | sed "s/address \(\([0-9]\)\{1,3\}\.\)\{3\}[0-9]\{1,3\}/$(echo "$INTERNAL_IP_BASE" | sed "s/{node_index:n}/254/")/")
+		echo $result >> /etc/network/interfaces.d/clusterctrl
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

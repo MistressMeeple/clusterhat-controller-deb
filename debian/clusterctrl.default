@@ -2,11 +2,18 @@
 # ClusterCTRL
 #
 
-# CLUSTERHAT_SIZE - Number of Pi Zeros in your ClusterHAT (defaults to 4 if ClusterHAT exists and not set)
-#CLUSTERHAT_SIZE=4
+# Number of Pi Zeros in your ClusterHAT (max 4)
+# Default: 4
+CLUSTERHAT_SIZE=4
 
-# CLUSTERCTRL_DELAY - How many seconds to delay between turning on Pi Zeros
-#CLUSTERCTRL_DELAY=1
+# How many seconds to delay between turning on the nodes
+# Default: 1
+CLUSTERCTRL_DELAY=1
+
+# Internet network used between the controller and nodes
+# Parsed by python formatting with the keyword node_index:n
+# Default 172.19.180.{node_index:n}
+INTERNAL_IP_BASE=172.19.180.{node_index:n}
 
 ## Folders
 # Folder structure is joined by python os.path.join, ie if it starts with / it becomes a full path and ignores any previous parts of the join
@@ -42,6 +49,5 @@ OFS_DIR=.overlayfs
 VFS_FILENAME=.vfs
 
 # Default max size of VirtualFS on creation, passed firectly into the "count" param of dd
-# Default: 8GB
-VFS_SIZE=8GB
-
+# Default: 2GB
+VFS_SIZE=2GB

@@ -12,32 +12,38 @@ import time
 import os
 import subprocess
 import shlex
+import shutil
 
 args = len(sys.argv)
 
-if args == 1 or sys.argv[1] == 'help' or sys.argv[1] == '--help' or sys.argv[1] == '-h' or sys.argv[1] == '/?':
+if args == 1 or  'help' in sys.argv or '--help' in sys.argv or '--h' in sys.argv or '-h' in sys.argv or '/?' in sys.argv[1]:
 	help_width = 30
+	indent_width=3
+	indent = "".ljust(indent_width)
+	
 	print("Usage:	clusterctrl <command> [<args>]")
 	print("")
 	print("<devices> can be a single device index '1' or a list '2 3 4'")
 	print("")
 	print("Commands: ")
-	print("	" + "init".ljust(help_width) +							"Create/update symlinks for rpiboot [root]")
-	print("	" + "status".ljust(help_width) +						"Shows the current status of the clusterhat and nodes")
-	print("	" + "maxpi".ljust(help_width) +							"Returns max number of Pi Zeros we control")
-	print("	" + "on|off [<devices>]".ljust(help_width) +			"Turn on/off All Pi Zero or devices")
-	print("	" + "shutdown [<devices>]".ljust(help_width) + 			"NYI. Send shutdown command to All Pi Zero or devices")  # TODO implement
-	print("	" + "alert on|off [<devices>]".ljust(help_width) +		"Turns on/off ALERT LED or all or listed devices")
-	print("	" + "led on|off".ljust(help_width) +					"Enable/disable all LED")
-	print("	" + "hub off|on|reset".ljust(help_width) +				"USB hub can be turned on/off on Cluster HAT and reset on CTRL")
-	print("	" + "getpath <device>".ljust(help_width) +				"Get USB path to the chosen device")
-	print("	" + "fan on|off".ljust(help_width) +					"Turns FAN on/off")
-	print("	" + "wp on|off".ljust(help_width) +						"Enable/disable write protection")
-	print("	" + "usbboot".ljust(help_width) + 						"Commands to handle the USBBoot folders and data")
-	print("	" + "	on|off [<devices>]".ljust(help_width) + 		"Mounts/Unmounts all folders for successful USBBoot for all, or chosen, devices")
-	print("	" + "	reset <devices>".ljust(help_width) + 			"NYI. Resets the device's OFS data")  # TODO implement
-	print("	" + "	status [<devices>]".ljust(help_width) + 		"NYI. Shows the USBBoot status of all, or chosen, nodes")  # TODO implement
-	print("	" + "	service".ljust(help_width) +			 		"Called by the USBBoot service, calls 'on' for all devices but doesnt do the init functionality")
+	print(indent + "init".ljust(help_width) +							"Create/update symlinks for rpiboot [root]")
+	print(indent + "status".ljust(help_width) +						"Shows the current status of the clusterhat and nodes")
+	print(indent + "maxpi".ljust(help_width) +							"Returns max number of Pi Zeros we control")
+	print(indent + "on|off [<devices>]".ljust(help_width) +			"Turn on/off All Pi Zero or devices")
+#	print(indent + "shutdown [<devices>]".ljust(help_width) + 			"NYI. Send shutdown command to All Pi Zero or devices")  # TODO implement
+	print(indent + "alert on|off [<devices>]".ljust(help_width) +		"Turns on/off ALERT LED or all or listed devices")
+	print(indent + "led on|off".ljust(help_width) +					"Enable/disable all LED")
+	print(indent + "hub off|on|reset".ljust(help_width) +				"USB hub can be turned on/off on Cluster HAT and reset on CTRL")
+	print(indent + "getpath <device>".ljust(help_width) +				"Get USB path to the chosen device")
+	print(indent + "fan on|off".ljust(help_width) +					"Turns FAN on/off")
+	print(indent + "wp on|off".ljust(help_width) +						"Enable/disable write protection")
+	print(indent + "usbboot".ljust(help_width) + 						"Commands to handle the USBBoot folders and data")
+	print(indent + indent + "on|off [<devices>]".ljust(help_width) + 		"Mounts/Unmounts all folders for successful USBBoot for all, or chosen, devices")
+	print(indent + indent + "setup [<devices>]".ljust(help_width) + 		"Sets up everthing neccesary for the specified node(s). Building VFS will take longer depending on the chosen size")
+	print(indent + indent + "reset <device>".ljust(help_width) + 			"Resets the device's data by removing contents of the node's OFS dir")
+	print(indent + indent + "resize <device> <new-size>".ljust(help_width) + 			"NYI. Resizes the device's VFS file to the new size") # TODO implement
+	print(indent + indent + "status [<devices>]".ljust(help_width) + 		"NYI. Shows the USBBoot status of all, or chosen, nodes")  # TODO implement
+	print(indent + indent + "service".ljust(help_width) +			 		"Called by the USBBoot service, calls 'on' for all devices but doesnt do the init functionality")
 	sys.exit(1)
 
 # Read configuration file
@@ -138,7 +144,8 @@ ofsLowerDir = os.path.join(dataDir, config['ofs_lower_dir'])
 vfs_filename = config['vfs_filename']
 nfs_dir = config['nfs_dir']
 ofs_dir = config['ofs_dir']
-ipv4_address = "172.19.180.{node_index:n}"
+# String REQUIRES node_index to present in this variable
+ipv4_address = config['internal_ip_base']
 
 
 # Build list of pi zero numbers to get USB path of
@@ -238,7 +245,8 @@ def link_boot_dir(node_index, usb_paths):
 		# If the link already exists remove it
 		if os.path.islink(boot_path):
 			os.unlink(boot_path)
-		os.symlink(os.path.join(get_node_dir(node_index), "boot"), boot_path)
+		os.symlink(os.path.join(get_node_dir(node_index), nfs_dir, "boot/"), boot_path)
+		return True
 
 
 def sed(check, replace, file_in):
@@ -260,6 +268,7 @@ def usbboot_node_on(nodes, do_init=True):
 	if os.geteuid() != 0:
 		print("Cant run as non-root")
 	else:
+		controller_ipv4 = ipv4_address.format(node_index=254)
 		# mount file systems
 		if not os.path.exists(os.path.join(ofsLowerDir, "boot")):
 			print("Missing lower directory for OverlayFS, cannot setup USB Boot for the nodes")
@@ -268,19 +277,22 @@ def usbboot_node_on(nodes, do_init=True):
 			currently_mounted_file = open("/etc/mtab")
 			currently_mounted = currently_mounted_file.read()
 			currently_mounted_file.close()
+			
 			for node in nodes:
+				node = int(node)
+				print("Starting USBBoot mounting for node " + str(node))
 				node_dir = get_node_dir(node)
 				if not os.path.exists(node_dir) and do_init:
 					os.makedirs(node_dir)
+					print("Making node dir")
 				if not os.path.exists(node_dir):
 					print("Dir does not exist, cannot continue (" + node_dir + ")")
-				else:
+				if os.path.exists(node_dir):
 					is_enabled = len([x for x in os.listdir(os.path.join(node_dir)) if len(x) >= 6 and (x[-6:] == "enable" or x[-7:] == "enabled")]) != 0
-					is_active_file = os.path.join(node_dir, ".active")
 					if not is_enabled and do_init:
 						open(os.path.join(node_dir, node_prefix+str(node)+".usbboot.enabled"), "w").close()
 						is_enabled = True
-					if is_enabled and not os.path.exists(is_active_file):
+					if is_enabled:
 						vfs_full_path = os.path.join(node_dir, vfs_filename) + ".ext4"
 						if not os.path.exists(vfs_full_path) and do_init:
 							open(vfs_full_path, "w").close()
@@ -308,57 +320,64 @@ def usbboot_node_on(nodes, do_init=True):
 											ofs_mount_str = "mount -o rw,relatime,lowerdir=" + ofsLowerDir + ",upperdir=" + os.path.join(ofs_full_path, "upper") + ",workdir=" + os.path.join(ofs_full_path, "work") + " -t overlay overlay " + nfs_full_path
 											print("[OFS] Now mounting OFS to NFS path for node " + str(node))
 
-											currently_mounted_nfs_file = open("/var/lib/nfs/etab")
-											currently_mounted_nfs = currently_mounted_nfs_file.read()
-											currently_mounted_nfs_file.close()
 
-											if nfs_full_path in currently_mounted_nfs or run_os_cmd(ofs_mount_str):
+											if nfs_full_path in currently_mounted or run_os_cmd(ofs_mount_str):
 												print("[NFS] Now mounting NFS path for node " + str(node))
+												
+												currently_mounted_nfs_file = open("/var/lib/nfs/etab")
+												currently_mounted_nfs = currently_mounted_nfs_file.read()
+												currently_mounted_nfs_file.close()
 												# mount boot first
 												if link_boot_dir(node, usb_paths):
 													nfs_mount_str = "exportfs -o rw,sync,no_subtree_check,no_root_squash " + ipv4_address.format(node_index=node) + ":" + nfs_full_path
 													print("[NFS] Now exporting NFS path for node " + str(node))
 													if run_os_cmd(nfs_mount_str):
 														if do_init:
-															#sed - i "s#^127.0.1.1.*#127.0.1.1\tp${P}#g" $DIR / etc / hosts
 															sed(r"\n127.0.1.1(\s|\t)*(\w*)", r"127.0.1.1\t"+node_prefix+str(node), os.path.join(nfs_full_path, "etc", "hosts"))
-
-															#sed - i "s#nfsroot=.*:static#nfsroot=172.19.180.254:/var/lib/clusterctrl/nfs/p$P rw ip=172.19.180.$P:172.19.180.254::255.255.255.0:p$P:usb0.10:static#" $DIR / boot / cmdline.txt
-															controller_ipv4 = ipv4_address.format(_node_index=254)
-															node_ipv4 = ipv4_address.format(_node_index=node)
+															node_ipv4 = ipv4_address.format(node_index=node)
 															sed(r"nfsroot=(.)*static", "nfsroot="+controller_ipv4+":"+nfs_full_path+" rw ip="+node_ipv4+":"+controller_ipv4+"::255.255.255.0:"+node_prefix+str(node)+":usb0.10:static", os.path.join(nfs_full_path, "boot", "cmdline.txt"))
-
-															#sed - i "s+static ip_address=172.19.181.253/24 #ClusterCTRL+static ip_address=172.19.181.${P}/24 #ClusterCTRL+" $DIR / etc / dhcpcd.conf
-															sed(r"\nstatic ip_address=(.)* #ClusterCTRL", "static ip_address=172.19.181."+str(node)+"/24 #ClusterCTRL", os.path.join(nfs_full_path, "etc", "dhcpcd.conf"))
+															sed(r"\nstatic ip_address=(.)* #ClusterCTRL", "static ip_address="+node_ipv4+"/24 #ClusterCTRL", os.path.join(nfs_full_path, "etc", "dhcpcd.conf"))
 															open(os.path.join(nfs_full_path, "boot", "ssh"), "w").close()
-														print("Node " + str(node) + " is ready for USBBoot")
-														open(is_active_file, "w").close()
+													print("Node " + str(node) + " is ready for USBBoot")
+												else:
+													print("Failed to link boot dir for node " + str(node))
+													
 
 
 def usbboot_node_off(nodes):
 	for node in nodes:
 		node_dir = get_node_dir(node)
-		is_active_file = os.path.join(node_dir, ".active")
-		if os.path.exists(is_active_file):
-			nfs_full_path = os.path.join(node_dir, nfs_dir)
-			ofs_full_path = os.path.join(node_dir, ofs_dir)
-			vfs_full_path = os.path.join(node_dir, vfs_filename) + ".ext4"
-			nfs_umount_str = "exportfs -u " + ipv4_address.format(_node_index=str(node)) + ":" + nfs_full_path
-			if run_os_cmd(nfs_umount_str):
-				print("Unmounted NFS")
-			else:
-				print("NFS unmount error")
-			ofs_unmount_str = "umount " + nfs_full_path
-			if run_os_cmd(ofs_unmount_str):
-				print("Unmounted OFS")
-			else:
-				print("OFS unmount error")
-			vfs_umount_str = "umount " + ofs_full_path
-			if run_os_cmd(vfs_umount_str):
-				print("Unmounted VFS")
-			else:
-				print("VFS unmount error")
-			os.remove(is_active_file)
+		node_ipv4 = ipv4_address.format(node_index=int(node))		
+		
+		currently_mounted_nfs_file = open("/var/lib/nfs/etab")
+		currently_mounted_nfs = currently_mounted_nfs_file.read()
+		currently_mounted_nfs_file.close()
+		
+		nfs_full_path = os.path.join(node_dir, nfs_dir)
+		nfs_umount_str = "exportfs -u " + node_ipv4 + ":" + nfs_full_path
+		
+		if nfs_full_path not in currently_mounted_nfs or run_os_cmd(nfs_umount_str):
+			print("Unmounted NFS")
+		else:
+			print("NFS unmount error")		
+		
+		currently_mounted_file = open("/etc/mtab")
+		currently_mounted = currently_mounted_file.read()
+		currently_mounted_file.close()
+		
+		ofs_full_path = os.path.join(node_dir, ofs_dir)
+		ofs_unmount_str = "umount " + nfs_full_path
+		if ofs_full_path not in currently_mounted or run_os_cmd(ofs_unmount_str):
+			print("Unmounted OFS")
+		else:
+			print("OFS unmount error")
+		
+		vfs_full_path = os.path.join(node_dir, vfs_filename) + ".ext4"
+		vfs_umount_str = "umount " + ofs_full_path
+		if vfs_full_path not in currently_mounted or run_os_cmd(vfs_umount_str):
+			print("Unmounted VFS")
+		else:
+			print("VFS unmount error")
 		enabled_files = [x for x in os.listdir(node_dir) if len(x) >= 6 and (x[-6:] == "enable" or x[-7:] == "enabled")]
 		for enabled_file in enabled_files:
 			os.remove(os.path.join(node_dir, enabled_file))
@@ -488,7 +507,7 @@ if args == 2 and sys.argv[1] == 'init':
 
 		bootcode_file = os.path.join(bootDir, "bootcode.bin")
 		if not os.path.exists(bootcode_file):
-			os.link("/boot/bootcode.bin", bootcode_file)
+			run_os_cmd("ln -fs /boot/bootcode.bin " + bootcode_file)
 
 		usb_paths = getusbpaths()
 		# Delete links for Px
@@ -555,7 +574,7 @@ if args == 2 and (sys.argv[1] == "on" or sys.argv[1] == "off"):
 				actioned += 1
 		else:
 
-			print("Turning all node off")
+			print("Turning all nodes off")
 			p1.off()
 			p2.off()
 			p3.off()
@@ -757,7 +776,7 @@ elif args == 4 and sys.argv[2] == 'wp' and (sys.argv[3] == 'on' or sys.argv[3] =
 			else:
 				wp.off()
 
-elif sys.argv[1] == "usbboot" and (sys.argv[2] == "on" or sys.argv[2] == "off" or sys.argv[2] == "status"):
+elif sys.argv[1] == "usbboot" and (sys.argv[2] == "on" or sys.argv[2] == "setup" or sys.argv[2] == "off" or sys.argv[2] == "status"):
 	zeros = []
 	if args > 3:
 		for argv in sys.argv[3:]:
@@ -765,15 +784,17 @@ elif sys.argv[1] == "usbboot" and (sys.argv[2] == "on" or sys.argv[2] == "off" o
 				zero = int(argv)
 			else:
 				zero = argv[-1:]
-			if not (1 <= int(zero) < maxpi):
+			if not (1 <= int(zero) < maxpi + 1):
 				print("ERROR: Valid options are 1-" + str(maxpi))
 				sys.exit(1)
 			zeros.append(int(zero))
 	else:
 		zeros = range(1, clusterhat_size+1)
 
-	if sys.argv[2] == "on":
+	if sys.argv[2] == "setup":
 		usbboot_node_on(zeros, True)
+	if sys.argv[2] == "on":
+		usbboot_node_on(zeros, False)
 	elif sys.argv[2] == "off":
 		usbboot_node_off(zeros)
 	elif sys.argv[2] == "status":
@@ -782,15 +803,25 @@ elif sys.argv[1] == "usbboot" and sys.argv[2] == "service":
 	zeros = range(1, clusterhat_size + 1)
 	usbboot_node_on(zeros, False)
 elif sys.argv[1] == "usbboot" and sys.argv[2] == "reset":
-	if True:
-		print("NYI")
-	elif args == 4:
+	if args == 4:
 		node = sys.argv[3]
 		node_dir = get_node_dir(node)
-		vfs_full_path = os.path.join(node_dir, vfs_filename) + ".ext4"
 		# Turn off node
 		usbboot_node_off(node)
-		os.remove(vfs_full_path)
+		# get oFS dir
+		ofs_dir = os.path.join(node_dir, ofs_dir)
+		# empty overlayfs subdir
+		for filename in os.listdir(ofs_dir):
+		    file_path = os.path.join(ofs_dir, filename)
+		    try:
+		        if os.path.isfile(file_path) or os.path.islink(file_path):
+		            os.unlink(file_path)
+		        elif os.path.isdir(file_path):
+		            shutil.rmtree(file_path)
+		    except Exception as e:
+		        print('Failed to delete %s. Reason: %s' % (file_path, e))
+		#and then re-init usbboot node
+		usbboot_node_on(node, True)
 	else:
 		print("Too many arguments. ")
 elif sys.argv[1] == "usbboot" and sys.argv[2] == "resize":

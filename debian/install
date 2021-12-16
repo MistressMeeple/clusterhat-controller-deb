@@ -3,3 +3,5 @@ controllers/minicom/* /etc/minicom/
 controllers/sbin/ /usr/
 controllers/share/clusterctrl/python /usr/share/clusterctrl/
 controllers/share/clusterctrl/ /usr/share/
+#controllers/share/initramfs-tools /usr/share/
+debian/clusterctrl.default /usr/share/clusterctrl/

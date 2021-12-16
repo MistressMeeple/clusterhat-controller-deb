@@ -10,7 +10,7 @@ auto brint br0
 
 iface brint inet static
         bridge_ports none
-        address 172.19.180.254
+        address 000.000.000.000
         netmask 255.255.255.0
         bridge_stp off
         bridge_waitport 0
@@ -22,7 +22,7 @@ iface brint inet static
 
 iface br0 inet manual
 	# either 'none' for NAT, or 'eth0' for Bridge
-        bridge_ports none
+        bridge_ports eth0
         bridge_stp off
         bridge_waitport 0
         bridge_fd 0
